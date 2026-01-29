@@ -13,7 +13,10 @@ class Main{
 
     public static void main(String[]args){
 
-        //create our file obj that needs to be passed into Scanner later
+        /*
+        Initally create File to be passed to scanners and printWriters. First began by reading
+        In the file and calling add student on all the information in the file orginally
+         */
         File file = new File("src/students.txt");
 
         //get ready to parse information
@@ -26,7 +29,7 @@ class Main{
             // Create a Scanner object to read from the file
             Scanner scanner = new Scanner(file);
 
-            while (scanner.hasNextLine()) {
+            while (scanner.hasNextInt()) {
                 //while loop to parse data specifically how instructed
                 localId = scanner.nextInt();
                 localName = scanner.next();
@@ -48,6 +51,7 @@ class Main{
         // create another scanner to take input from command line
         Scanner scanner = new Scanner(System.in);
 
+        //for ease of reading i made printMenu that prints options to the user
         printMenu();
 
         String input;
@@ -57,7 +61,7 @@ class Main{
             try {
                 result = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input Please enter a number from 1-5 or -1 to quit" + input);
+                System.out.println("Invalid input Please enter a number from 1-5 or -1 to quit.");
             }
 
             //add student
@@ -72,10 +76,11 @@ class Main{
                     System.out.print("enter the student grade: ");
                     double gradeInput = scanner.nextDouble();
                     addStudent(id, name, age, gradeInput);
-                    System.out.print("success!");
+                    System.out.println("success!");
                 } catch(InputMismatchException e){
                     System.out.print("please enter an valid Intger, String, integer, and double to add student\n");
                 }
+                printToFile();
 
             }//update student
             else if(result == 2){
@@ -126,7 +131,6 @@ class Main{
                 ages[i] = age;
                 grades[i] = grade;
                 numStudents++;
-                printToFile();
                 return;
             }
         }
@@ -195,15 +199,21 @@ class Main{
 
         int index = indexOfStudent(id);
         if(index != -1){
-            names[index] = "";
-            ids[index] = 0;
-            ages[index] = 0;
-            grades[index] = 0;
+            for(int i = index; i< numStudents; i++){
+                ids[i] = ids[i+1];
+                names[i]= names[i+1];
+                grades[i] = grades[i+1];
+                ages[i] = ages[i+1];
+            }
+
+            //set back to default data type for each array
+            names[numStudents] = null;
+            ids[numStudents] = 0;
+            grades[numStudents] = 0;
+            ages[numStudents] = 0;
             numStudents--;
-            printToFile();
-            return;
         }else{
-            System.out.print("Student ID NOT FOUND!!");
+            System.out.println("Student ID NOT FOUND!!");
         }
     }
 
